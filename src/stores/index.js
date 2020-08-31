@@ -1,7 +1,9 @@
-import FormsStore from './formsStore';
+
+import mainStore from './mainStore'
 
 const stores = {
-    formsStore: new FormsStore(),
+    mainStore,
+    formsStore: mainStore.formsStore
 }
 
 export default stores

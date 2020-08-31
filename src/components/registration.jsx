@@ -1,12 +1,13 @@
 import React from 'react';
+import { observer, inject } from 'mobx-react';
+import { Redirect } from 'react-router'
 
-export default function Registration ({ changeForm, submitRegistration }) {
-
+const Registration = inject('formsStore')(observer(({ formsStore })=>{
     return (
         <div className='registration-panel'>
             <form id='reg' 
-                onChange={ changeForm }
-                onSubmit={ submitRegistration }
+                onChange={ formsStore.changeForm }
+                onSubmit={ formsStore.submitForm }
             >
                 <input type='text' className='registration__name' form='reg' name='name' placeholder='Set your name...' required />
                 <input type='text' className='registration__login' form='reg' name='login' placeholder='Create your login...' required />
@@ -14,6 +15,9 @@ export default function Registration ({ changeForm, submitRegistration }) {
                 <input type='password' className='registration__password' form='reg' name='repPass' placeholder='Repeat your pass...' required />
                 <input type='submit' className='registration__enter' form='reg' value='Send' />
             </form>
+            { formsStore.form.redirect&&<Redirect to='/' /> }
       </div>
     )
-}
+}))
+
+export default Registration
