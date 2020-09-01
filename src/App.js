@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 
-import { Lobby, Registration, SignIn } from './components';
+import { Lobby, Registration, SignIn, Room} from './components';
 
 const App = inject('mainStore')(observer(({ mainStore }) => {
   
@@ -13,13 +13,19 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
       <Switch>
         <Route exact path='/lobby' 
           render={(props)=>
-            <Lobby /> 
+            <Lobby name={'111'} /> 
         }/>
         <Route exact path='/signIn' render={(props)=>
            <SignIn /> 
         }/>
         <Route exact path='/registration' render={(props)=>
            <Registration /> 
+        }/>
+        <Route exact path='/freedom' render={(props)=>
+           <Room name={'flood'} /> 
+        }/>
+        <Route exact path='/hardwork' render={(props)=>
+           <Room name={'work'} /> 
         }/>
         { mainStore.mainRedirect.link&&<Redirect to={mainStore.mainRedirect.link} /> }
       </Switch>

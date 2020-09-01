@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function Room () {
+export default function Room ({name}) {
     
     return (
         <div className='room'>
             <div className='userlist'>
-                <div className='userlist__user'>
+                <div className='userlist__user' onClick={()=>console.log(name)}>
                     <img alt='avatar'/>
                     <span>
                     Username 1111111111

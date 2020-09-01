@@ -1,36 +1,32 @@
 import React from 'react';
+import { observer, inject } from 'mobx-react';
+import { Link } from 'react-router-dom';
 
-export default function Lobby () {
+const Lobby = inject('lobbyStore')(observer(({ lobbyStore }) =>{
 
     return (
         <div className='main-panel'>
             <div className='userlist'>
-                <div className='userlist__user'>
-                    <img alt='avatar' />
-                    <span>
-                    Username111111111111111111
-                    </span>
-                </div>
-                <div className='userlist__user'>
-                    <img alt='avatar' />
-                    <span>
-                    Username
-                    </span>
-                </div>
-                <div className='userlist__user'>
-                    <img alt='avatar' />
-                    <span>
-                    Username
-                    </span>
-                </div>
+                {
+                    lobbyStore.users.map((user, index)=>
+                        <div className='userlist__user' key={user.name}>
+                            <img alt='avatar' src={user.avatar} />
+                            <span>
+                                {user.name}
+                            </span>
+                        </div>
+                    )
+                }
             </div>
             <div className='main-panel__rooms'>
                 <div className='main-panel__rooms--buttons'>
-                    <button className='btn'>Комната свободы от забот</button>
-                    <button className='btn'>Комната забот</button>
+                    <Link to='/freedom'><button className='btn' >Комната свободы от забот</button></Link>
+                    <Link to='/hardwork'><button className='btn' >Комната забот</button></Link>
                     <button className='btn'>Комната секретиков</button>
                 </div>
             </div>
       </div>
     )
-}
+}))
+
+export default Lobby
