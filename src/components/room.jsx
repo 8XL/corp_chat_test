@@ -1,17 +1,18 @@
 import React from 'react';
+import { observer, inject } from 'mobx-react';
 
-export default function Room ({name}) {
+export const Room = inject('roomStore')(observer(({roomStore, name }) => {
     
     return (
         <div className='room'>
             <div className='userlist'>
-                <div className='userlist__user' onClick={()=>console.log(name)}>
+                <div className='userlist__user' >
                     <img alt='avatar'/>
                     <span>
                     Username 1111111111
                     </span>
                 </div>
-                <div className='userlist__user'>
+                <div className='userlist__user' >
                     <img alt='avatar'/>
                     <span>
                     Username
@@ -54,4 +55,4 @@ export default function Room ({name}) {
             </div>
         </div>
     )
-}
+}))

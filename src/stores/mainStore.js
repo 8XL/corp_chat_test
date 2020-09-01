@@ -35,6 +35,11 @@ class mainStore{
            isLogged: false 
         }
 
+    @computed 
+        get getClient(){
+            return this.main.user
+        }
+
 };
 
 export default new mainStore();

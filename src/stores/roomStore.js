@@ -1,15 +1,14 @@
-import { observable, action, computed, reaction, autorun } from 'mobx';
+import { observable, action, computed, reaction, autorun, get } from 'mobx';
 
 import { getRoom, addUserRoom, addMessages } from '../api/sokets';
 import mainStore from './mainStore';
 
-
-export default class roomStore extends mainStore{
+export default class roomStore{
 
     @observable 
         room = {
             roomId: null,
-            user: mainStore.main.user,
+            user: mainStore.getClient,
             client: null,
             users: [],
             messages: [],
@@ -31,6 +30,7 @@ export default class roomStore extends mainStore{
         setMessage = (newMessage) => {
             this.messages = [...this.messages, newMessage]
         }
+    
 
     @action // не уверен, что здесь нужен декоратор, проверь
         connectRoom = () => {
@@ -38,5 +38,4 @@ export default class roomStore extends mainStore{
             getRoom(this.room.roomId, this.fetchRoom);
             addMessages(this.room.roomId, this.setMessage);
         };
-
 }
