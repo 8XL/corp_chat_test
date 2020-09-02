@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react';
 export const Room = inject('roomStore')(observer(({roomStore, name }) => {
     
     return (
-        <div className='room'>
+        <div className='room' onClick={()=>console.log(roomStore.room.user)}>
             <div className='userlist'>
                 <div className='userlist__user' >
                     <img alt='avatar'/>

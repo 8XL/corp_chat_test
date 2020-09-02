@@ -1,23 +1,32 @@
-import { observable, action, computed, reaction, autorun } from 'mobx';
+import { observable, action, computed, reaction, autorun, toJS } from 'mobx';
 
 import formsStore from './formsStore';
 import lobbyStore from './lobbyStore';
-import roomStore from './roomStore'
+import roomStore from './roomStore';
+import { joinLobby } from '../api/sokets'
 
 class mainStore{
 
     constructor(){
         this.formsStore = new formsStore();
         this.lobbyStore = new lobbyStore();
-        this.roomStore = new roomStore()
+        this.roomStore = new roomStore();
+
+        this.getLobby = this.lobbyStore.setUsers;
+        this.joinLobby = joinLobby;
+
 
         autorun(()=>{
             const user = localStorage.getItem('user'); 
             if(user){
-                this.main.user = user;
+                const userObj = JSON.parse(user);
+                this.setUser(userObj);
+                this.roomStore.setClient(userObj);
+
                 this.mainRedirect.link = '/lobby';
                 this.mainRedirect.islogged = true;
-                this.lobbyStore.newUser(user)
+              
+                this.joinLobby(userObj, this.getLobby);
             } else {
                 this.mainRedirect.link = '/signin'
             }
@@ -27,6 +36,11 @@ class mainStore{
     @observable
         main = {
             user: null,
+        }
+
+    @action 
+        setUser = (user) =>{
+            this.main.user = user;
         }
 
     @observable 

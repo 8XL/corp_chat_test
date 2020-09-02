@@ -7,9 +7,9 @@ import './App.css';
 import { Lobby, Registration, SignIn, Room} from './components';
 
 const App = inject('mainStore')(observer(({ mainStore }) => {
-  
+
   return (
-    <div className="wrapper">
+    <div className="wrapper" >
       <Switch>
         <Route exact path='/lobby' 
           render={(props)=>

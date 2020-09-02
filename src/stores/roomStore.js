@@ -1,41 +1,42 @@
 import { observable, action, computed, reaction, autorun, get } from 'mobx';
 
-import { getRoom, addUserRoom, addMessages } from '../api/sokets';
-import mainStore from './mainStore';
 
 export default class roomStore{
 
     @observable 
         room = {
             roomId: null,
-            user: mainStore.getClient,
             client: null,
             users: [],
             messages: [],
         };
 
+    @action
+        setClient = (client) =>{
+            this.room.client = client;
+        }
+
     @action 
-        setRoom = (id) => {
-            this.room.roomId = id;
-            this.connectRoom();
+        setRoom = (roomId) => {
+            this.room.roomId = roomId;
         };
 
     @action
-        fetchRoom = (data) => {
-            this.room.users = data.users;
-            this.room.messages = data.messages;
-        };
+        setUserList = (users) =>{
+            this.room.users = users;
+        }
+
+    @action
+        setHistory = (history) => {
+            this.room.messages = history;
+        }
 
     @action 
         setMessage = (newMessage) => {
-            this.messages = [...this.messages, newMessage]
+            const message = { 
+                name:this.user.name,
+                text: newMessage
+            };
+            this.room.messages = [...this.room.messages, message];
         }
-    
-
-    @action // не уверен, что здесь нужен декоратор, проверь
-        connectRoom = () => {
-            addUserRoom(this.room.roomId, this.room.user);
-            getRoom(this.room.roomId, this.fetchRoom);
-            addMessages(this.room.roomId, this.setMessage);
-        };
 }

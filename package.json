@@ -2,6 +2,7 @@
   "name": "corp-chat-test2",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "dependencies": {
     "@babel/core": "7.9.0",
     "@babel/plugin-proposal-decorators": "^7.10.5",
@@ -30,6 +31,7 @@
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-react-hooks": "^1.6.1",
+    "express": "^4.17.1",
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.11",
@@ -41,6 +43,7 @@
     "mini-css-extract-plugin": "0.9.0",
     "mobx": "^5.15.6",
     "mobx-react": "^6.3.0",
+    "nodemon": "^2.0.4",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.1.0",
@@ -69,6 +72,7 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
+    "dev": "nodemon server.js",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
