@@ -1,4 +1,4 @@
-import { observable, action, computed, reaction, autorun, toJS } from 'mobx';
+import { observable, action, computed, autorun } from 'mobx';
 
 import formsStore from './formsStore';
 import lobbyStore from './lobbyStore';

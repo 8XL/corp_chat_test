@@ -185,15 +185,31 @@ button:hover {
 }
 
 .message {
-    width: 75%;
+    width: 25vw;
+    height: auto;
     padding: 10px;
     margin: 2px;
+    word-wrap: break-word;
+    color: #3d3c3c;
+}
+
+.message span {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.message p {
+    margin: 1%;
 }
 
 .out {
     align-self: flex-end;
     border-radius: 20px 20px 0 20px;
     background: #f3ca38;
+}
+
+.out span {
+    color: White;
 }
 
 .enter {

@@ -1,4 +1,5 @@
 import { observable, computed, action } from 'mobx';
+import mainStore from './mainStore';
  
 export default class formsStore {
   
@@ -29,7 +30,9 @@ export default class formsStore {
           password: this.form.value.pass
         };
         localStorage.setItem('user', JSON.stringify(user));
-        this.form.redirect =  true
+        this.form.redirect =  true;
+        mainStore.mainRedirect.link = '/lobby';
+        mainStore.mainRedirect.islogged = true;
       } else {
         alert('The passwords entered do not match. Try again, pls.')
       };

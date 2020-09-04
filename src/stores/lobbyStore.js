@@ -1,4 +1,4 @@
-import { observable, action, computed, reaction, autorun } from 'mobx';
+import { observable, action } from 'mobx';
 
 export default class lobbyStore {
 

@@ -1,15 +1,27 @@
-import { observable, action, computed, reaction, autorun, get } from 'mobx';
+import { observable, action } from 'mobx';
+
+import { joinRoom, sendMessage, getMessage, socket} from '../api/sokets'
 
 
 export default class roomStore{
+    constructor(){
+        this.joinRoom = joinRoom;
+        this.sendMessage = sendMessage;
+        this.getMessage = getMessage;
+    }
 
     @observable 
         room = {
             roomId: null,
             client: null,
-            users: [],
-            messages: [],
+            message: '',
         };
+
+    @observable
+        users = [];
+
+    @observable
+        messages = [];
 
     @action
         setClient = (client) =>{
@@ -19,24 +31,48 @@ export default class roomStore{
     @action 
         setRoom = (roomId) => {
             this.room.roomId = roomId;
+            this.getMessage(this.addNewMessage);
+            this.joinRoom(this.room.client, roomId, this.setHistory, this.setUserList)
         };
 
     @action
         setUserList = (users) =>{
-            this.room.users = users;
+            this.users = users;
         }
 
     @action
         setHistory = (history) => {
-            this.room.messages = history;
+            this.messages = history;
+        }
+    
+    @action 
+        changeMessage = (e) => {
+            if(e.target.name===this.room.roomId){
+                this.room.message = e.target.value;
+            };
+        }
+    
+    @action
+        submitForm = (e) =>{
+            e.preventDefault()
+            if(e.target.name===this.room.roomId){
+                console.log('сабмитюююююю')
+                const message = {
+                    roomId: this.room.roomId,
+                    name: this.room.client.name,
+                    userId: socket.id,
+                    text: this.room.message
+                };
+
+                this.sendMessage(message);
+                this.addNewMessage(message);
+            };
         }
 
     @action 
-        setMessage = (newMessage) => {
-            const message = { 
-                name:this.user.name,
-                text: newMessage
-            };
-            this.room.messages = [...this.room.messages, message];
+        addNewMessage = (message) => {
+            if(message.roomId===this.room.roomId){
+                this.messages = [...this.messages, message];
+            }
         }
-}
+} 

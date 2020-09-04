@@ -22,7 +22,7 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
            <Registration /> 
         }/>
         <Route exact path='/freedom' render={(props)=>
-           <Room name={'flood'} /> 
+           <Room name={'freedom'} /> 
         }/>
         <Route exact path='/hardwork' render={(props)=>
            <Room name={'work'} /> 
