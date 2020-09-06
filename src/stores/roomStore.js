@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { joinRoom, sendMessage, getMessage, socket} from '../api/sokets'
+import { joinRoom, sendMessage, getMessage, leaveRoom } from '../api/sokets'
 
 
 export default class roomStore{
@@ -8,6 +8,7 @@ export default class roomStore{
         this.joinRoom = joinRoom;
         this.sendMessage = sendMessage;
         this.getMessage = getMessage;
+        this.leaveRoom = leaveRoom;
     }
 
     @observable 
@@ -26,7 +27,7 @@ export default class roomStore{
     @action
         setClient = (client) =>{
             this.room.client = client;
-        }
+        };
 
     @action 
         setRoom = (roomId) => {
@@ -38,19 +39,19 @@ export default class roomStore{
     @action
         setUserList = (users) =>{
             this.users = users;
-        }
+        };
 
     @action
         setHistory = (history) => {
             this.messages = history;
-        }
+        };
     
     @action 
         changeMessage = (e) => {
             if(e.target.name===this.room.roomId){
                 this.room.message = e.target.value;
             };
-        }
+        };
     
     @action
         submitForm = (e) =>{
@@ -60,19 +61,25 @@ export default class roomStore{
                 const message = {
                     roomId: this.room.roomId,
                     name: this.room.client.name,
-                    userId: socket.id,
                     text: this.room.message
                 };
 
                 this.sendMessage(message);
                 this.addNewMessage(message);
             };
-        }
+        };
 
     @action 
         addNewMessage = (message) => {
             if(message.roomId===this.room.roomId){
                 this.messages = [...this.messages, message];
-            }
-        }
+            };
+        };
+
+    @action 
+        clearRoom = () => {
+            this.users = [];
+            this.messages = [];
+            this.leaveRoom(this.room.roomId);
+        };
 } 

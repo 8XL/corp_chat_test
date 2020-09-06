@@ -16,9 +16,8 @@ export default class formsStore {
       this.form.value = {
           ...this.form.value,
           [name]:value
-      }
-      
-    }
+      };
+    };
 
   @action 
     submitForm = (e) => {
@@ -42,5 +41,5 @@ export default class formsStore {
     get getRedirect(){
       console.log(this.form.redirect)
       return this.form.redirect
-    }
+    };
 } 

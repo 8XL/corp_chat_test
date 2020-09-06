@@ -27,3 +27,6 @@ export const getMessage = (getMessage) =>{
     socket.on('ADD_MESSAGE', getMessage); // на входе в объекте румID
 }
 
+export const leaveRoom = (roomId) => {
+    socket.emit('leave', roomId);
+}

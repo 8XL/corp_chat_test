@@ -5,6 +5,7 @@ export const Room = inject('roomStore')(observer(({roomStore, name }) => {
     
     React.useEffect(()=>{
         roomStore.setRoom(name);
+        return ()=>roomStore.clearRoom();
     },[])
 
     return (
