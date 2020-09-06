@@ -1,4 +1,5 @@
-export { default as Lobby } from './lobby';
+export { Lobby } from './lobby';
 export { Room } from './room';
 export { default as SignIn } from './signIn';
-export { default as Registration } from './registration';
+export { Registration } from './registration';
+export { News } from './news'

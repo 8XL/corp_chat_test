@@ -2,7 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Redirect } from 'react-router';
 
-const Registration = inject('formsStore')(observer(({ formsStore })=>{
+export const Registration = inject('formsStore')(observer(({ formsStore })=>{
     return (
         <div className='registration-panel'>
             <form id='reg' 
@@ -20,4 +20,3 @@ const Registration = inject('formsStore')(observer(({ formsStore })=>{
     )
 }))
 
-export default Registration

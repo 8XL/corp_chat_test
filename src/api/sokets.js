@@ -5,7 +5,15 @@ export const socket = io();
 export const joinLobby = (user, getUsers) => {
     socket.emit('JOIN', user, getUsers); 
     socket.on('GET_ALL', getUsers);
-}
+};
+
+export const getNews = (getNews) => {
+    socket.on('GET_NEWS', getNews);
+};
+
+export const addNews = (news) => {
+    socket.emit('ADD_NEWS', news);
+};
 
 export const joinRoom = (user, roomId, getHistory, getUsers) =>{
     const obj = {
@@ -16,17 +24,17 @@ export const joinRoom = (user, roomId, getHistory, getUsers) =>{
         getHistory(history);
         getUsers(users);
     });
-    socket.on('GET_ALL_ROOM', getUsers); // на входе в объекте socketID
-}
+    socket.on('GET_ALL_ROOM', getUsers);
+};
 
 export const sendMessage = (message) =>{
     socket.emit('ADD_MESSAGE', message);
-}
+};
 
 export const getMessage = (getMessage) =>{
-    socket.on('ADD_MESSAGE', getMessage); // на входе в объекте румID
-}
+    socket.on('ADD_MESSAGE', getMessage);
+};
 
 export const leaveRoom = (roomId) => {
     socket.emit('leave', roomId);
-}
+};

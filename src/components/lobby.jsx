@@ -2,7 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Link } from 'react-router-dom';
 
-const Lobby = inject('lobbyStore', 'roomStore')(observer(({ lobbyStore}) =>{
+export const Lobby = inject('lobbyStore', 'roomStore')(observer(({ lobbyStore, children }) =>{
 
     return (
         <div className='main-panel'>
@@ -24,9 +24,8 @@ const Lobby = inject('lobbyStore', 'roomStore')(observer(({ lobbyStore}) =>{
                     <Link to='/hardwork'><button className='btn'>Комната забот</button></Link>
                     <button className='btn'>Комната секретиков</button>
                 </div>
+                {children}
             </div>
       </div>
     )
 }))
-
-export default Lobby

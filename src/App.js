@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 
-import { Lobby, Registration, SignIn, Room} from './components';
+import { Lobby, Registration, SignIn, Room, News } from './components';
 
 const App = inject('mainStore')(observer(({ mainStore }) => {
 
@@ -13,7 +13,9 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
       <Switch>
         <Route exact path='/lobby' 
           render={(props)=>
-            <Lobby name={'111'} /> 
+            <Lobby name={'111'} children = {
+              <News/>
+            } />
         }/>
         <Route exact path='/signIn' render={(props)=>
            <SignIn /> 

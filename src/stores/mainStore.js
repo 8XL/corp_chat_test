@@ -3,7 +3,8 @@ import { observable, action, computed, autorun } from 'mobx';
 import formsStore from './formsStore';
 import lobbyStore from './lobbyStore';
 import roomStore from './roomStore';
-import { joinLobby } from '../api/sokets'
+import newsStore from './newsStore';
+import { joinLobby, getNews } from '../api/sokets'
 
 class mainStore{
 
@@ -11,10 +12,13 @@ class mainStore{
         this.formsStore = new formsStore();
         this.lobbyStore = new lobbyStore();
         this.roomStore = new roomStore();
+        this.newsStore = new newsStore();
 
         this.getLobby = this.lobbyStore.setUsers;
         this.joinLobby = joinLobby;
 
+        this.setNewsList = this.newsStore.setNewsList;
+        this.getNews = getNews;
 
         autorun(()=>{
             const user = localStorage.getItem('user'); 
@@ -27,6 +31,7 @@ class mainStore{
                 this.mainRedirect.islogged = true;
               
                 this.joinLobby(userObj, this.getLobby);
+                this.getNews(this.setNewsList);
             } else {
                 this.mainRedirect.link = '/signin'
             }
