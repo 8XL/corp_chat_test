@@ -13,9 +13,11 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
       <Switch>
         <Route exact path='/lobby' 
           render={(props)=>
-            <Lobby name={'111'} children = {
-              <News/>
-            } />
+            <Lobby 
+              children = {
+                <News/>
+              } 
+            />
         }/>
         <Route exact path='/signIn' render={(props)=>
            <SignIn /> 

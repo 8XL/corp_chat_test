@@ -248,18 +248,44 @@ input[type='submit']:hover {
     justify-content: center;
     width: 64px;
     height: 64px;
-    background-color: #ffe791;
+    background-color: white;
+    border: 5px solid #ffe791;
     border-radius: 100%;
+    transition: all 0.4s;
+}
+
+.news__item--raiting-circle:hover   {
+    background-color: #ffe791;
+    border: 5px solid white;
+    transition: all 0.4s;
 }
 
 .news__item--raiting-circle svg {
     position: relative;
     top: -2px;
+    fill: #ffe791;
+    transition: all 0.4s;
+}
+
+.news__item--raiting-circle:hover svg  {
+    fill: white;
+    transition: all 0.4s;
 }
 
 .news__item--raiting-count {
     font-weight: 700;
     font-size: 22px;
+}
+
+.disabled {
+    background-color: #fbc91a;
+    border: 5px solid white;
+    transition: all 0.4s;
+}
+
+.disabled svg {
+    fill: white;
+    transition: all 0.4s;
 }
 
 .room__chat {

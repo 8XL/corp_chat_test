@@ -6,7 +6,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const port = process.env.PORT || 8080;
-
+ 
 const rooms = new Map([
     ['lobby', new Map([
         ['users', new Map(
@@ -22,7 +22,27 @@ const rooms = new Map([
                 name: 'So cuty rainbow unicorn',
                 avatar: 'https://img1.pnghut.com/4/21/18/1L1Zs9jTHz/animal-figure-pony-pack-legendary-creature-albom.jpg'
             }]]
-        )]
+        )],
+        ['newsList', new Map([
+            [123141242412, {
+                title: 'aaaa',
+                content: 'AAAAAaaaAAAAaaaaa',
+                postId: 123141242412,
+                raiting: [1,2,3,4,5,]
+            }],
+            [123141321412, {
+                title: 'accaaa',
+                content: 'AAAAAaaaAAAAaaaccccaa',
+                postId: 123141321412,
+                raiting: [1,2,3,4,5,6,7,9,'odealo']
+            }],
+            [333141321412, {
+                title: 'abbaaa',
+                content: 'AAAAAaaaAAAAaaaabbbba',
+                postId: 333141321412,
+                raiting: [1,2,3,4,5]
+            }],
+        ])]
     ])],
     ['freedom', new Map([
         ['users', new Map([['asds', {
@@ -96,9 +116,28 @@ io.on('connect', (socket)=>{
         };
         rooms.get('lobby').get('users').set(socket.id, user);
         const users = [...rooms.get('lobby').get('users').values()];
-        fn(users);
         socket.to('lobby').broadcast.emit('GET_ALL', users);
+        const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
+        fn(users, newsList);
     });
+
+    socket.on('ADD_NEWS', (news, fn)=>{
+        const post = {
+            ...news,
+            postId: timeId,
+            raiting: [],
+        };
+        rooms.get('lobby').get('newsList').set(post.timeId, post);
+        const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
+        socket.to('lobby').broadcast.emit('GET_NEWS', newsList);
+        fn(newsList);
+    });
+
+    socket.on('ADD_RAITING', obj=>{
+        rooms.get('lobby').get('newsList').get(obj.postId).raiting = obj.raiting;
+        const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
+        socket.to('lobby').broadcast.emit('GET_NEWS', newsList);
+    })
     
     socket.on('JOIN_ROOM', (obj, fn)=>{
         const { roomId, user } = obj;
@@ -130,8 +169,6 @@ io.on('connect', (socket)=>{
         socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', message);
     });
 
-
-
     socket.on('leave', roomId=>{
         socket.leave(roomId, ()=>{
             console.log(socket.id, ' left the ', roomId);
@@ -139,8 +176,8 @@ io.on('connect', (socket)=>{
             rooms.get(roomId).get('users').delete(socket.id);
             const users = [...rooms.get(roomId).get('users').values()];
             socket.to(roomId).broadcast.emit('GET_ALL_ROOM', users) ;
-        })
-    })
+        });
+    });
 
     socket.on('disconnect', ()=>{
         rooms.forEach((room, roomId)=> {

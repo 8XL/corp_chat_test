@@ -2,18 +2,24 @@ import io from 'socket.io-client';
 
 export const socket = io();
 
-export const joinLobby = (user, getUsers) => {
-    socket.emit('JOIN', user, getUsers); 
+export const joinLobby = (user, getUsers, getNews) => {
+    socket.emit('JOIN', user, (users, newsList)=>{
+        getUsers(users);
+        getNews(newsList);
+    }); 
     socket.on('GET_ALL', getUsers);
-};
-
-export const getNews = (getNews) => {
     socket.on('GET_NEWS', getNews);
 };
 
-export const addNews = (news) => {
-    socket.emit('ADD_NEWS', news);
+export const addNews = (news, getNews) => {
+    socket.emit('ADD_NEWS', news, (newsList)=>{
+        getNews(newsList)
+    });
 };
+
+export const addRaiting = (raiting) => {
+    socket.emit('ADD_RAITING', raiting);
+}
 
 export const joinRoom = (user, roomId, getHistory, getUsers) =>{
     const obj = {

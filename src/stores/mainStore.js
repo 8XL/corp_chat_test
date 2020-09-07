@@ -4,7 +4,7 @@ import formsStore from './formsStore';
 import lobbyStore from './lobbyStore';
 import roomStore from './roomStore';
 import newsStore from './newsStore';
-import { joinLobby, getNews } from '../api/sokets'
+import { joinLobby } from '../api/sokets'
 
 class mainStore{
 
@@ -18,7 +18,6 @@ class mainStore{
         this.joinLobby = joinLobby;
 
         this.setNewsList = this.newsStore.setNewsList;
-        this.getNews = getNews;
 
         autorun(()=>{
             const user = localStorage.getItem('user'); 
@@ -30,8 +29,7 @@ class mainStore{
                 this.mainRedirect.link = '/lobby';
                 this.mainRedirect.islogged = true;
               
-                this.joinLobby(userObj, this.getLobby);
-                this.getNews(this.setNewsList);
+                this.joinLobby(userObj, this.getLobby, this.setNewsList);
             } else {
                 this.mainRedirect.link = '/signin'
             }
