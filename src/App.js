@@ -4,9 +4,9 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 
-import { Lobby, Registration, SignIn, Room, News } from './components';
+import { Lobby, Registration, SignIn, Room, News, UserList } from './components';
 
-const App = inject('mainStore')(observer(({ mainStore }) => {
+const App = inject('mainStore', 'lobbyStore', 'roomStore')(observer(({ mainStore, lobbyStore, roomStore }) => {
 
   return (
     <div className="wrapper" >
@@ -14,7 +14,12 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
         <Route exact path='/lobby' 
           render={(props)=>
             <Lobby 
-              children = {
+              userList = {
+                <UserList 
+                  store = { lobbyStore } 
+                />
+              }
+              news = {
                 <News/>
               } 
             />
@@ -26,10 +31,24 @@ const App = inject('mainStore')(observer(({ mainStore }) => {
            <Registration /> 
         }/>
         <Route exact path='/freedom' render={(props)=>
-           <Room name={'freedom'} /> 
+           <Room 
+              name={'freedom'}
+              userList = {
+                <UserList 
+                  store = { roomStore } 
+                />
+              }
+            /> 
         }/>
         <Route exact path='/hardwork' render={(props)=>
-           <Room name={'work'} /> 
+           <Room 
+              name={'work'} 
+              userList = {
+                <UserList 
+                  store = { roomStore } 
+                />
+              }          
+           /> 
         }/>
         { mainStore.mainRedirect.link&&<Redirect to={mainStore.mainRedirect.link} /> }
       </Switch>

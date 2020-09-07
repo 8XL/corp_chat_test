@@ -153,14 +153,19 @@ input[type='submit']:hover {
 
 .main-panel__rooms--buttons {
     display: inline-flex;
+    justify-content: space-between;
+}
+
+.main-panel__rooms--buttons,
+.main-panel__rooms--buttons a,
+.main-panel__rooms--buttons a button {
     width: 100%;
-    justify-content: space-around;
 }
 
 .news {
     display: flex;
     flex-direction: column;
-    margin: 10px;
+    margin-top: 10px;
     height: 69vh;
     overflow-y: scroll;
     overflow-x: hidden;
