@@ -1,14 +1,13 @@
 import { observable, action } from 'mobx';
 
-import { joinRoom, sendMessage, getMessage, leaveRoom } from '../api/sokets'
-
+import { joinRoom, sendMessage, deleteMessage, leaveRoom } from '../api/sokets';
 
 export default class roomStore{
     constructor(){
         this.joinRoom = joinRoom;
         this.sendMessage = sendMessage;
-        this.getMessage = getMessage;
         this.leaveRoom = leaveRoom;
+        this.deleteMessage = deleteMessage;
     }
 
     @observable 
@@ -32,10 +31,9 @@ export default class roomStore{
     @action 
         setRoom = (roomId) => {
             this.room.roomId = roomId;
-            this.getMessage(this.addNewMessage);
             this.joinRoom(this.room.client, roomId, this.setHistory, this.setUserList)
         };
-
+ 
     @action
         setUserList = (users) =>{
             this.users = users;
@@ -57,22 +55,26 @@ export default class roomStore{
         submitForm = (e) =>{
             e.preventDefault()
             if(e.target.name===this.room.roomId){
-                console.log('сабмитюююююю')
                 const message = {
                     roomId: this.room.roomId,
                     name: this.room.client.name,
                     text: this.room.message
                 };
-
+                this.messages.push(message);
                 this.sendMessage(message);
-                this.addNewMessage(message);
+                this.room.message = '';
             };
         };
 
-    @action 
-        addNewMessage = (message) => {
-            if(message.roomId===this.room.roomId){
-                this.messages = [...this.messages, message];
+    @action
+        delMessage = (messageId, i) => {
+            if(window.confirm('Вы действительно хотите удалить это вот?')){
+                const delObj = {
+                    id: messageId,
+                    roomId: this.room.roomId
+                }
+                this.deleteMessage(delObj)
+                this.messages.splice(i, 1);
             };
         };
 

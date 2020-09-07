@@ -9,8 +9,8 @@ export const News = inject('newsStore')(observer(({ newsStore }) =>{
                     onChange={ newsStore.changeForm }
                     onSubmit={ newsStore.setNewPost }
                 >
-                    <input className='news__creator--name' name='title' form='newPost' type='text' placeholder='Названьице...' value={newsStore.newPost.title} required />
-                    <textarea className='news__creator--content' name='content' form='newPost' type='text' placeholder='Новостюхи, сплетни, пожелания(не рекомендую), предложения(не-а)...' value={newsStore.newPost.content} required/>
+                    <input className='news__creator--name' name='title' form='newPost' type='text' placeholder='Названьице...' value={newsStore.newPost.title} maxlength='50' required />
+                    <textarea className='news__creator--content' name='content' form='newPost' type='text' placeholder='Новостюхи, сплетни, пожелания(не рекомендую), предложения(не-а)...' value={newsStore.newPost.content} maxlength='200' required/>
                     <input className='news__creator--submit' type='submit' form='newPost' value='Запостить'/>
                 </form>
             </div>

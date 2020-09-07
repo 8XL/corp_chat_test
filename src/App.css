@@ -235,10 +235,10 @@ input[type='submit']:hover {
 }
 
 .news__item--info p {
-    width: 20vw;
+    width: 25vw;
     font-size: 18px;
     line-height: 26px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .news--item--raiting {
@@ -363,7 +363,7 @@ input[type='submit']:hover {
 .room__chat--form form textarea {
     margin: 5px;
     width: 80%;
-    height: 65%;
+    height: 85%;
     border-radius: 10px;
     border-color: #ecd377;
 }

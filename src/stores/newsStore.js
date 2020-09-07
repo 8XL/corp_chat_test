@@ -1,7 +1,8 @@
 import { observable, action } from 'mobx';
 
 import { addNews, addRaiting } from '../api/sokets';
-import mainStore from './mainStore'
+import mainStore from './mainStore';
+import formsStore from './formsStore';
 
 export default class newsStore {
     constructor() {

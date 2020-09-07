@@ -12,63 +12,67 @@ const rooms = new Map([
         ['users', new Map(
             [['asds', {
                 name: '8XL',
+                id: 4412312,
                 avatar: 'https://c7.hotpng.com/preview/17/18/444/finn-the-human-jake-the-dog-character-television-show-adventure-time.jpg'
             }],
             ['asdaaa', {
                 name: 'Bruce Wayne',
+                id: 4412223,
                 avatar: 'https://i.pinimg.com/originals/fa/d8/91/fad8915570b3aca1c995e3d642801bcb.png'
             }],
             ['asdaddd', {
                 name: 'So cuty rainbow unicorn',
+                id: 4412123123,
                 avatar: 'https://img1.pnghut.com/4/21/18/1L1Zs9jTHz/animal-figure-pony-pack-legendary-creature-albom.jpg'
             }]]
         )],
         ['newsList', new Map([
             [123141242412, {
-                title: 'aaaa',
-                content: 'AAAAAaaaAAAAaaaaa',
+                title: 'Пропала уборщица',
+                content: 'В последний раз видели в серверной. Проверьте, авось в проводах запуталась?',
                 postId: 123141242412,
-                raiting: [1,2,3,4,5,]
+                raiting: [1,2]
             }],
             [123141321412, {
-                title: 'accaaa',
-                content: 'AAAAAaaaAAAAaaaccccaa',
+                title: 'Отпустим грехи?',
+                content: 'Случайно на днях увел из холодильника чей-то тортик...прастити...',
                 postId: 123141321412,
                 raiting: [1,2,3,4,5,6,7,9,'odealo']
             }],
             [333141321412, {
-                title: 'abbaaa',
-                content: 'AAAAAaaaAAAAaaaabbbba',
+                title: 'Важнецкая конференция в Гонолулу',
+                content: 'Ну, вощем, предлагаю руководству организовать поездку сотрудников в Гонолулу на конференцию.',
                 postId: 333141321412,
-                raiting: [1,2,3,4,5]
+                raiting: [4, 8, 15, 16, 23, 42, 4, 8, 15, 16, 23, 42,]
             }],
         ])]
     ])],
     ['freedom', new Map([
         ['users', new Map([['asds', {
             name: '8XL',
+            id: 123123,
             avatar: 'https://c7.hotpng.com/preview/17/18/444/finn-the-human-jake-the-dog-character-television-show-adventure-time.jpg'
         }],])],
-        ['messages', [
-            {
+        ['messages', new Map([
+            ['28736192379',{
                 roomId: 'freedom',
                 name: 'unknown',
                 text: 'i see staaaars...',
                 messageId: '28736192379',
-            },
-            {
+            }],
+            ['287361923790',{
                 roomId: 'freedom',
                 name: '8XL',
                 text: 'i see staaaars...',
                 messageId: '287361923790',
-            },
-            {
+            }],
+            ['2873619237907',{
                 roomId: 'freedom',
                 name: 'unknown',
                 text: 'i see staaaars...',
                 messageId: '2873619237907',
-            },
-        ]]
+            }],
+        ])]
     ])],
     ['work', new Map([
         ['users', new Map([
@@ -81,20 +85,20 @@ const rooms = new Map([
                 avatar: 'https://img1.pnghut.com/4/21/18/1L1Zs9jTHz/animal-figure-pony-pack-legendary-creature-albom.jpg'
             }]
         ])],
-        ['messages', [
-            {
+        ['messages', new Map([
+            ['2874449554907', {
                 roomId: 'work',
                 name: 'Bruce Wayne',
                 text: 'Как успехи?',
-                messageId: '2873619554907',
-            },
-            {
+                messageId: '2874449554907',
+            }],
+            ['287366737127', {
                 roomId: 'work',
                 name: 'So cuty rainbow unicorn',
                 text: 'Знаешь...ну вот например заходишь в дом, где неделю жили дети без родителей после вечеринки...заходишь и думаешь:" ну его нахер убирать" и выходишь на улицу. потом все-таки думаешь, что надо убрать..возвращаешься и убираешь первые пару бутылок, смотришь опять на все вцелом и думаешь "нет, таки нахер это" и опять выходишь на улицу и куришь...собираешься с мыслями, что надо убрать и опять 5 мин убираешь и все еще в ужасе выходишь на улицу посмотреть, что есть еще жизнь нормальная...и такими итерациями пока не уберешь. вот так и у меня сейчас с моим кодом...',
-                messageId: '287366737907',
-            },
-        ]]
+                messageId: '287366737127',
+            }],
+        ])]
     ])]
 ])
  
@@ -124,7 +128,7 @@ io.on('connect', (socket)=>{
     socket.on('ADD_NEWS', (news, fn)=>{
         const post = {
             ...news,
-            postId: timeId,
+            postId: timeId.toString(),
             raiting: [],
         };
         rooms.get('lobby').get('newsList').set(post.timeId, post);
@@ -134,15 +138,17 @@ io.on('connect', (socket)=>{
     });
 
     socket.on('ADD_RAITING', obj=>{
+        console.log(obj)
         rooms.get('lobby').get('newsList').get(obj.postId).raiting = obj.raiting;
         const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
+
         socket.to('lobby').broadcast.emit('GET_NEWS', newsList);
     })
     
-    socket.on('JOIN_ROOM', (obj, fn)=>{
+    socket.on('JOIN_ROOM', async(obj, fn)=>{
         const { roomId, user } = obj;
         socket.join(roomId);
-        console.log(socket.id, ' connected the ', roomId)
+        console.log(socket.id, ' connected the ', roomId);
         const newUser = {
             name: user.name, 
             avatar: user.avatar,
@@ -151,7 +157,7 @@ io.on('connect', (socket)=>{
         };
         rooms.get(roomId).get('users').set(socket.id, newUser);
         const users = [...rooms.get(roomId).get('users').values()];
-        const history = rooms.get(roomId).get('messages');
+        const history = [...rooms.get(obj.roomId).get('messages').values()];
         fn(history, users);
         socket.to(roomId).broadcast.emit('GET_ALL_ROOM', users);
     });
@@ -165,8 +171,15 @@ io.on('connect', (socket)=>{
             messageId: messageId,
         };
 
-        rooms.get(obj.roomId).get('messages').push(message);
-        socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', message);
+        rooms.get(obj.roomId).get('messages').set(message.messageId, message);
+        const messages = [...rooms.get(obj.roomId).get('messages').values()];
+        socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', messages);
+    });
+
+    socket.on('DEL_MESSAGE', (obj)=>{
+        rooms.get(obj.roomId).get('messages').delete(obj.id);
+        const messages = [...rooms.get(obj.roomId).get('messages').values()];
+        socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', messages);
     });
 
     socket.on('leave', roomId=>{
