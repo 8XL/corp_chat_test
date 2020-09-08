@@ -27,7 +27,7 @@ class mainStore{
                 this.roomStore.setClient(userObj);
 
                 this.mainRedirect.link = '/lobby';
-                this.mainRedirect.islogged = true;
+                this.mainRedirect.isLogged = true;
               
                 this.joinLobby(userObj, this.getLobby, this.setNewsList);
             } else {

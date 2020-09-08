@@ -44,26 +44,15 @@ export default class roomStore{
             this.messages = history;
         };
     
-    @action 
-        changeMessage = (e) => {
-            if(e.target.name===this.room.roomId){
-                this.room.message = e.target.value;
-            };
-        };
-    
     @action
-        submitForm = (e) =>{
-            e.preventDefault()
-            if(e.target.name===this.room.roomId){
-                const message = {
-                    roomId: this.room.roomId,
-                    name: this.room.client.name,
-                    text: this.room.message
-                };
-                this.messages.push(message);
-                this.sendMessage(message);
-                this.room.message = '';
+        createMessage = (txt) =>{
+            const message = {
+                roomId: this.room.roomId,
+                name: this.room.client.name,
+                text: txt
             };
+            this.messages.push(message);
+            this.sendMessage(message);
         };
 
     @action

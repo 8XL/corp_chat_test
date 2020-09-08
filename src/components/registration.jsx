@@ -15,7 +15,7 @@ export const Registration = inject('formsStore')(observer(({ formsStore })=>{
                 <input type='password' className='registration__password' form='reg' name='repPass' placeholder='Repeat your pass...' required />
                 <input type='submit' className='registration__enter' form='reg' value='Send' />
             </form>
-            { formsStore.form.redirect && <Redirect to='/' /> }
+            { formsStore.redirect && <Redirect to='/' /> }
       </div>
     )
 }))

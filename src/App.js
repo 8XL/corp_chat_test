@@ -7,11 +7,11 @@ import './App.css';
 import { Lobby, Registration, SignIn, Room, News, UserList } from './components';
 
 const App = inject('mainStore', 'lobbyStore', 'roomStore')(observer(({ mainStore, lobbyStore, roomStore }) => {
-
   return (
     <div className="wrapper" >
       <Switch>
-        <Route exact path='/lobby' 
+        {mainStore.mainRedirect.isLogged
+        &&<Route exact path='/lobby' 
           render={(props)=>
             <Lobby 
               userList = {
@@ -23,14 +23,9 @@ const App = inject('mainStore', 'lobbyStore', 'roomStore')(observer(({ mainStore
                 <News/>
               } 
             />
-        }/>
-        <Route exact path='/signIn' render={(props)=>
-           <SignIn /> 
-        }/>
-        <Route exact path='/registration' render={(props)=>
-           <Registration /> 
-        }/>
-        <Route exact path='/freedom' render={(props)=>
+        }/>}
+        {mainStore.mainRedirect.isLogged
+        &&<Route exact path='/freedom' render={(props)=>
            <Room 
               name={'freedom'}
               userList = {
@@ -39,8 +34,9 @@ const App = inject('mainStore', 'lobbyStore', 'roomStore')(observer(({ mainStore
                 />
               }
             /> 
-        }/>
-        <Route exact path='/hardwork' render={(props)=>
+        }/>}
+        {mainStore.mainRedirect.isLogged
+        &&<Route exact path='/hardwork' render={(props)=>
            <Room 
               name={'work'} 
               userList = {
@@ -49,6 +45,12 @@ const App = inject('mainStore', 'lobbyStore', 'roomStore')(observer(({ mainStore
                 />
               }          
            /> 
+        }/>}
+        <Route exact path='/signIn' render={(props)=>
+           <SignIn /> 
+        }/>
+        <Route exact path='/registration' render={(props)=>
+           <Registration /> 
         }/>
         { mainStore.mainRedirect.link&&<Redirect to={mainStore.mainRedirect.link} /> }
       </Switch>

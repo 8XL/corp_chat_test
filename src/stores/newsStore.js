@@ -2,7 +2,6 @@ import { observable, action } from 'mobx';
 
 import { addNews, addRaiting } from '../api/sokets';
 import mainStore from './mainStore';
-import formsStore from './formsStore';
 
 export default class newsStore {
     constructor() {
@@ -12,12 +11,6 @@ export default class newsStore {
 
     @observable 
         newsList = [];
-    
-    @observable
-        newPost = {
-            title: '',
-            content: '',
-        };
 
     @action
         setNewsList = (newsList) => {
@@ -25,33 +18,17 @@ export default class newsStore {
             newsList.forEach(post=>{
                 const checker = post.raiting.filter(word=>word===name);
                 if(checker.length!==0)post.liked = true; 
-            })
+            });
             this.newsList = newsList;
         };
 
-    @action
-        changeForm = (e) => {
-            const name = e.target.name;
-            const value = e.target.value;
-            this.newPost = {
-                ...this.newPost,
-                [name]:[value]
-            };
-        };
-
     @action 
-        setNewPost = (e) => {
-            e.preventDefault();
-            addNews(this.newPost, this.setNewsList);
-            this.newPost = {
-                title: '',
-                content: '',
-            }
+        setNewPost = (newPost) => { 
+            addNews(newPost, this.setNewsList);
         };
 
     @action
         setLike = (post) => {
-            console.log(post)
             if(post.liked){
                 alert('Низяяяяяя, ты уже лайкал!')
             }else{

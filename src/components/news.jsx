@@ -1,16 +1,19 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 
-export const News = inject('newsStore')(observer(({ newsStore }) =>{
+export const News = inject('newsStore', 'formsStore')(observer(({ newsStore, formsStore }) =>{
+    const title = formsStore.forms.get('newPost').value.title;
+    const content = formsStore.forms.get('newPost').value.content;
+
     return(
         <div className='news'>
             <div className='news__creator'>
                 <form id='newPost' 
-                    onChange={ newsStore.changeForm }
-                    onSubmit={ newsStore.setNewPost }
+                    onChange={ formsStore.changeForm }
+                    onSubmit={ formsStore.submitForm }
                 >
-                    <input className='news__creator--name' name='title' form='newPost' type='text' placeholder='Названьице...' value={newsStore.newPost.title} maxlength='50' required />
-                    <textarea className='news__creator--content' name='content' form='newPost' type='text' placeholder='Новостюхи, сплетни, пожелания(не рекомендую), предложения(не-а)...' value={newsStore.newPost.content} maxlength='200' required/>
+                    <input className='news__creator--name' name='title' form='newPost' type='text' value={ title } placeholder='Названьице...' maxLength='50' required />
+                    <textarea className='news__creator--content' name='content' form='newPost' type='text' value={ content } placeholder='Новостюхи, сплетни, пожелания(не рекомендую), предложения(не-а)...' maxLength='200' required/>
                     <input className='news__creator--submit' type='submit' form='newPost' value='Запостить'/>
                 </form>
             </div>

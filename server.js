@@ -5,102 +5,11 @@ const path = require('path');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+const data = require('./data');
+
 const port = process.env.PORT || 8080;
  
-const rooms = new Map([
-    ['lobby', new Map([
-        ['users', new Map(
-            [['asds', {
-                name: '8XL',
-                id: 4412312,
-                avatar: 'https://c7.hotpng.com/preview/17/18/444/finn-the-human-jake-the-dog-character-television-show-adventure-time.jpg'
-            }],
-            ['asdaaa', {
-                name: 'Bruce Wayne',
-                id: 4412223,
-                avatar: 'https://i.pinimg.com/originals/fa/d8/91/fad8915570b3aca1c995e3d642801bcb.png'
-            }],
-            ['asdaddd', {
-                name: 'So cuty rainbow unicorn',
-                id: 4412123123,
-                avatar: 'https://img1.pnghut.com/4/21/18/1L1Zs9jTHz/animal-figure-pony-pack-legendary-creature-albom.jpg'
-            }]]
-        )],
-        ['newsList', new Map([
-            [123141242412, {
-                title: 'Пропала уборщица',
-                content: 'В последний раз видели в серверной. Проверьте, авось в проводах запуталась?',
-                postId: 123141242412,
-                raiting: [1,2]
-            }],
-            [123141321412, {
-                title: 'Отпустим грехи?',
-                content: 'Случайно на днях увел из холодильника чей-то тортик...прастити...',
-                postId: 123141321412,
-                raiting: [1,2,3,4,5,6,7,9,'odealo']
-            }],
-            [333141321412, {
-                title: 'Важнецкая конференция в Гонолулу',
-                content: 'Ну, вощем, предлагаю руководству организовать поездку сотрудников в Гонолулу на конференцию.',
-                postId: 333141321412,
-                raiting: [4, 8, 15, 16, 23, 42, 4, 8, 15, 16, 23, 42,]
-            }],
-        ])]
-    ])],
-    ['freedom', new Map([
-        ['users', new Map([['asds', {
-            name: '8XL',
-            id: 123123,
-            avatar: 'https://c7.hotpng.com/preview/17/18/444/finn-the-human-jake-the-dog-character-television-show-adventure-time.jpg'
-        }],])],
-        ['messages', new Map([
-            ['28736192379',{
-                roomId: 'freedom',
-                name: 'unknown',
-                text: 'i see staaaars...',
-                messageId: '28736192379',
-            }],
-            ['287361923790',{
-                roomId: 'freedom',
-                name: '8XL',
-                text: 'i see staaaars...',
-                messageId: '287361923790',
-            }],
-            ['2873619237907',{
-                roomId: 'freedom',
-                name: 'unknown',
-                text: 'i see staaaars...',
-                messageId: '2873619237907',
-            }],
-        ])]
-    ])],
-    ['work', new Map([
-        ['users', new Map([
-            ['asdaaa', {
-                name: 'Bruce Wayne',
-                avatar: 'https://i.pinimg.com/originals/fa/d8/91/fad8915570b3aca1c995e3d642801bcb.png'
-            }],
-            ['asdaddd', {
-                name: 'So cuty rainbow unicorn',
-                avatar: 'https://img1.pnghut.com/4/21/18/1L1Zs9jTHz/animal-figure-pony-pack-legendary-creature-albom.jpg'
-            }]
-        ])],
-        ['messages', new Map([
-            ['2874449554907', {
-                roomId: 'work',
-                name: 'Bruce Wayne',
-                text: 'Как успехи?',
-                messageId: '2874449554907',
-            }],
-            ['287366737127', {
-                roomId: 'work',
-                name: 'So cuty rainbow unicorn',
-                text: 'Знаешь...ну вот например заходишь в дом, где неделю жили дети без родителей после вечеринки...заходишь и думаешь:" ну его нахер убирать" и выходишь на улицу. потом все-таки думаешь, что надо убрать..возвращаешься и убираешь первые пару бутылок, смотришь опять на все вцелом и думаешь "нет, таки нахер это" и опять выходишь на улицу и куришь...собираешься с мыслями, что надо убрать и опять 5 мин убираешь и все еще в ужасе выходишь на улицу посмотреть, что есть еще жизнь нормальная...и такими итерациями пока не уберешь. вот так и у меня сейчас с моим кодом...',
-                messageId: '287366737127',
-            }],
-        ])]
-    ])]
-])
+const rooms = data;
  
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -108,19 +17,20 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.get('/test', (req, res)=>{return res.send('Hello world')});
 
 io.on('connect', (socket)=>{
-    const timeId = Math.floor(new Date().getTime()/10000);
-
+   
     socket.on('JOIN', (obj, fn)=>{ 
         socket.join('lobby');
-        console.log(socket.id, ' connected the lobby')
+        console.log(socket.id, ' connected the lobby');
         const user = {
             name: obj.name, 
             avatar: obj.avatar,
             id: socket.id
         };
         rooms.get('lobby').get('users').set(socket.id, user);
+
         const users = [...rooms.get('lobby').get('users').values()];
         socket.to('lobby').broadcast.emit('GET_ALL', users);
+
         const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
         fn(users, newsList);
     });
@@ -128,22 +38,22 @@ io.on('connect', (socket)=>{
     socket.on('ADD_NEWS', (news, fn)=>{
         const post = {
             ...news,
-            postId: timeId.toString(),
+            postId: Math.floor(new Date().getTime()/100).toString(),
             raiting: [],
         };
-        rooms.get('lobby').get('newsList').set(post.timeId, post);
+        rooms.get('lobby').get('newsList').set(post.postId, post);
+
         const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
         socket.to('lobby').broadcast.emit('GET_NEWS', newsList);
         fn(newsList);
     });
 
     socket.on('ADD_RAITING', obj=>{
-        console.log(obj)
         rooms.get('lobby').get('newsList').get(obj.postId).raiting = obj.raiting;
-        const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
 
+        const newsList = [...rooms.get('lobby').get('newsList').values()].reverse();
         socket.to('lobby').broadcast.emit('GET_NEWS', newsList);
-    })
+    });
     
     socket.on('JOIN_ROOM', async(obj, fn)=>{
         const { roomId, user } = obj;
@@ -156,6 +66,7 @@ io.on('connect', (socket)=>{
             room: roomId
         };
         rooms.get(roomId).get('users').set(socket.id, newUser);
+
         const users = [...rooms.get(roomId).get('users').values()];
         const history = [...rooms.get(obj.roomId).get('messages').values()];
         fn(history, users);
@@ -163,21 +74,21 @@ io.on('connect', (socket)=>{
     });
  
     socket.on('ADD_MESSAGE', (obj)=>{
-        const messageId = timeId.toString();
         const message = {
             roomId: obj.roomId,
             name: obj.name,
             text: obj.text,
-            messageId: messageId,
+            messageId: Math.floor((new Date().getTime()+1)/100).toString(),
         };
-
         rooms.get(obj.roomId).get('messages').set(message.messageId, message);
+
         const messages = [...rooms.get(obj.roomId).get('messages').values()];
         socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', messages);
     });
 
     socket.on('DEL_MESSAGE', (obj)=>{
         rooms.get(obj.roomId).get('messages').delete(obj.id);
+
         const messages = [...rooms.get(obj.roomId).get('messages').values()];
         socket.to(obj.roomId).broadcast.emit('ADD_MESSAGE', messages);
     });
@@ -185,8 +96,8 @@ io.on('connect', (socket)=>{
     socket.on('leave', roomId=>{
         socket.leave(roomId, ()=>{
             console.log(socket.id, ' left the ', roomId);
-
             rooms.get(roomId).get('users').delete(socket.id);
+
             const users = [...rooms.get(roomId).get('users').values()];
             socket.to(roomId).broadcast.emit('GET_ALL_ROOM', users) ;
         });
@@ -195,7 +106,8 @@ io.on('connect', (socket)=>{
     socket.on('disconnect', ()=>{
         rooms.forEach((room, roomId)=> {
             if(room.get('users').delete(socket.id)){
-                console.log(socket.id, ' disconnected')
+                console.log(socket.id, ' disconnected');
+
                 const users = [...rooms.get(roomId).get('users').values()];
                 roomId==='lobby'
                     ? socket.to('lobby').broadcast.emit('GET_ALL', users)
