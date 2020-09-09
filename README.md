@@ -1,68 +1,93 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Корпоративный чат 
 
-## Available Scripts
+![Скриншот главного экрана чата, слева юзер-лист, в центре блок новостей, в верхней части кнопки выбора конмнат](/git/main.png)
 
-In the project directory, you can run:
+Что у нас тут?
+-------------------------
 
-### `npm start`
+    Данное приложение представляет из себя корпоративный чат на время пандемии. 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    Честно говоря чат достаточно простой и без сложных изысков(черновой вариант демки, если уж совсем откровенным), уложившийся в примерный, двенадцати часовой таймлимит. Из интересного - приложение состоит из стейтлесс-компонентов. Есть еще идеи для реализации и позднее я объясню на примере, где и что хотел бы добавить, но пока давайте по порядку:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### <Lobby />
+    Главную комнату приложения вы уже видели на основном скриншоте. По большому счету данный компонент представляет из себя обертку с кнопками(они не имеют разумного функционала внутри приложения, засим и не стал их выносить в отдельный компонент). Фактически эти кнопки выступают лишь линками(react-router) для перемещения внутри чата.
+![Скриншот кнопок перехода в комнаты чата](/git/buttons.png)
 
-### `npm test`
+###### Невошедшее
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    Изначально кнопки было три(можете ознакомиться в ранних версиях). Планировалось добавить и третью комнату - "Комната секретов". Так как юзерлист хранит объекты не только с данными пользователя, но и его сокетом, то и реализация офера в секретный чат была бы весьма простой, например: 
+*socket.to(//socket.id нужного юзера//).emit(//объект с roomId и паролем секретной комнаты//)*. 
+    Но время поджимало.
 
-### `npm run build`
+### <UserList />
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Скриншот компонента user-list c отражением пользователей](/git/userList.png)
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    Данный компонет представляет из себя простой список пользователей, отражающий всех подключенных юзеров, в зависимости от комнаты. На главной странице отражены все пользователи, находящиеся онлайн независимо от их фактического расположения. В комнатах же отражены только участники чата, подключенные к этой самой комнате.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+###### Невошедшее 
 
-### `npm run eject`
+    По клику на себя в юзер-листе предполагалась настройка цветовой темы(styled components) и установка аватарки, но, за неимением полноценного сервера(да и качественных знаний по бэкенду), я решил оставить реализацию на конец. Возможно в ближайший свободный вечер этим займусь.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### <News />
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Скриншот компонента news с отражением опубликованных новостей](/git/gossip.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    Новости, конечно громко сказанно. 
+*Робин Данбар, британский антрополог и эволюционный психолог, специалист в области поведения приматов определил СПЛЕТНИ, как средство социального объединения больших групп.*
+    Следуя рекомендациям умных людей, было принято волевое решение реализовать не смайлы/картинки и прочие простые вещи(первое через юникод, второе через вставку ссылочек в `<img>`...да и это всё в телефонах есть...простите за наглость), а реализовать маленький блок внутрикорпоративных сплетен/новостей/идей/пожеланий и прочего, что хотелось бы вынести на рассмотрение общественности.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    Каждая из новостей имеет блок контента и блок рейтинга(лайки). Здесь уже чуть интереснее: на сервере объект новости с массивом пользователей, лайкнувших новость(сейчас объясню). Ввиду простейшей регистрации без соли и хэша, все проверки проводятся через имя пользователя. В данном случае, если массив хранит имя пользователя, значит пользователь уже поставил лайк и более сделать этого не сможет. 
+    Так же каждая новость имеет уникальный id, что и позволяет определить на сервере изменения рейтинга касательно определенной новости.
 
-## Learn More
+    Блок создания новой новости привязан, как и все формы привязаны к одному стору, но об этом позже.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+###### Невошедшее
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    Дизлайки и снятие лайка. Реализация простая и ничем не отличает от самого лайка, разве что метод массива меняем на array.splice/filter(еще не определился).
 
-### Code Splitting
+### <Room />
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+    Здесь все просто и понятно. Уже знакомый юзер-лист, обыкновенная форма отправки. Комната определяется от имени в пропсах.
+![Скриншот компонента room freedom с отражением истории чата](/git/room.png)
 
-### Analyzing the Bundle Size
+    Юзер-лист заполняется в зависимости от присутствия в комнате пользователей. 
+![Скриншот компонента room work с отражением истории чата](/git/room2.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+    По клику на любое сообщение предлагается возможность удалить сообщение из чата для всех пользователей.
 
-### Making a Progressive Web App
+    При переходе по линке из lobby через хуки запускается заполнение стора в зависимости от выбранной комнаты(work / freedom). Собственно при покидании комнаты стор очищается.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+###### Невошедшее
 
-### Advanced Configuration
+    Удаление сообщений для себя/для всех. 'Для всех' реализовал, 'для себя' сложнее, ибо нужно каждому пользователю в локалсторе(мой слабый бэкенд) сетить массив с удаленными "для себя" сообщениями для их фильтрации. Подобное мне показалось не очень удобным, но более адекватного решения я не придумал.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+    Сообщения с отметкой. Тут проще, ибо, как уже упоминалось, идентификаторы пользователей хранятся в списке.
 
-### Deployment
+### Stores
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+    Тут чуть-чуть интереснее. 
 
-### `npm run build` fails to minify
+    MaineStore инициализирует и прослушивает все остальные сторы. Оснвной упор логики приложения зашит в него: авторизация пользователя, редирект в чат или на регистрацию, инициализация главной комнаты чата и т.д.
+    Авторизация(оооочень простая) осуществляется запросом в локалсторэдж. Если пользователь найден по ключу - забиваем пользователя в сторы и переводим на главную чата. В противном же случае оправляем в окно авторизации(не работает за отсутствие сервера), откуда можно перейти в окно регистрации(работает, сетит данные пользователя в локалсторэдж).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+    FormsStore отвечает за все формы в приложении. В зависимости от значния атрибута *name* формы в мапу добавляется её знаечени при изменении.
+    Еще более коряво выглядит сабмит форм: switch / case, где кейс соответсвует уже упомянотому имени формы. Полность избежать обособленности форм не вышло, ибо сабмит некоторых форм на сервер подразумевает отправку объекта с несколькими значениями. Отсюда выполнение сабмита происходит через вызов метода в нужной сторе. 
+
+    Остальные сторы просты и менее интересны.
+
+### Стек / депсы
+Frontend
+    -React
+    -React-router
+    -Mobx
+    -Socket.io
+
+Backend
+    -Express(проверка сервера)
+    -Socket.io
+    -Nodemon
+
+Спасибо за внимание...
+
+p.s. Если увидите какие-то зубодробящие ошибки/костыли или еще чего интересного - очень прошу, оставьте комментарий, дабы я знал над чем работать. Спасибо.
